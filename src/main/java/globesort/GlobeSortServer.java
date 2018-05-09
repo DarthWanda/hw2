@@ -79,22 +79,38 @@ public class GlobeSortServer {
     static class GlobeSortImpl extends GlobeSortGrpc.GlobeSortImplBase {
         @Override
         public void ping(Empty req, final StreamObserver<Empty> responseObserver) {
-            Empty response = Empty.newBuilder().build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
+          long startTime = System.nanoTime();
+
+          Empty response = Empty.newBuilder().build();
+          responseObserver.onNext(response);
+          responseObserver.onCompleted();
+
+          long endTime = System.nanoTime();
+          long timeElapsed = endTime - startTime;
+          System.out.println("Server: Ping time in nanoseconds : " + timeElapsed);
+
         }
 
         @Override
         public void sortIntegers(IntArray req, final StreamObserver<IntArray> responseObserver) {
-            Integer[] values = req.getValuesList().toArray(new Integer[req.getValuesList().size()]);
-            Arrays.sort(values);
-            IntArray.Builder responseBuilder = IntArray.newBuilder();
-            for(Integer val : values) {
-                responseBuilder.addValues(val);
-            }
-            IntArray response = responseBuilder.build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
+
+          long startTime = System.nanoTime();
+
+          Integer[] values = req.getValuesList().toArray(new Integer[req.getValuesList().size()]);
+          Arrays.sort(values);
+          IntArray.Builder responseBuilder = IntArray.newBuilder();
+          for(Integer val : values) {
+              responseBuilder.addValues(val);
+          }
+          IntArray response = responseBuilder.build();
+          responseObserver.onNext(response);
+          responseObserver.onCompleted();
+
+
+          long endTime = System.nanoTime();
+          long timeElapsed = endTime - startTime;
+          System.out.println("Server: Sorting time in nanoseconds : " + timeElapsed);
+
         }
     }
 }
